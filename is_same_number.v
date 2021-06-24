@@ -38,7 +38,6 @@ module is_same_number(
     output reg [3:0]max_num_2=0,
     output reg [3:0]max_num_3=0,
     output reg [3:0]max_num_4=0,
-    output reg [3:0]max_num_5=0,
     output reg [3:0]test=0
 );
 reg [3:0]FOAK_max_num=0;

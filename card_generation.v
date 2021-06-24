@@ -31,15 +31,16 @@ input [15:0]random_number7,
 input [15:0]random_number8,
 input [15:0]random_number9,
 input clk,
-output reg [5:0]card1_num=0,
-output reg [5:0]card2_num=0,
-output reg [5:0]card3_num=0,
-output reg [5:0]card4_num=0,
-output reg [5:0]card5_num=0,
-output reg [5:0]card6_num=0,
-output reg [5:0]card7_num=0,
-output reg [5:0]card8_num=0,
-output reg [5:0]card9_num=0
+output reg [5:0]card1_num,
+output reg [5:0]card2_num,
+output reg [5:0]card3_num,
+output reg [5:0]card4_num,
+output reg [5:0]card5_num,
+output reg [5:0]card6_num,
+output reg [5:0]card7_num,
+output reg [5:0]card8_num,
+output reg [5:0]card9_num,
+output reg work_done_card_generation=0
 );
 
 
@@ -51,15 +52,15 @@ integer card_state=0;
 integer count;
 integer i;
 integer j;
-reg stop;
-
-
+reg stop=1;
 
 
 
 always @(posedge clk) begin
-
-    if(card_state==0)begin
+    if(card_state>=9)begin
+        work_done_card_generation=1;
+    end
+    else if(card_state==0)begin
         count=random_number1%52; 
         card_num[card_state]=count;
         card_state=card_state+1;
@@ -74,8 +75,8 @@ always @(posedge clk) begin
             available[count]=1;
         end
         else begin
-             card_num[card_state]=count+1;
-             available[count+1]=1;
+            card_num[card_state]=count+1;
+            available[count+1]=1;
         end
     end 
 
@@ -93,6 +94,7 @@ always @(posedge clk) begin
                 if(available[i]==0)begin
                     card_num[card_state]=i;
                     available[i%52]=1;
+                    card_state=card_state+1;
                     stop=1;
                 end
             end
@@ -111,6 +113,7 @@ always @(posedge clk) begin
                 if(available[i]==0)begin
                     card_num[card_state]=i;
                     available[i%52]=1;
+                    card_state=card_state+1;
                     stop=1;
                 end
             end
@@ -129,6 +132,7 @@ always @(posedge clk) begin
                 if(available[i]==0)begin
                     card_num[card_state]=i;
                     available[i%52]=1;
+                    card_state=card_state+1;
                     stop=1;
                 end
             end
@@ -147,6 +151,7 @@ always @(posedge clk) begin
                 if(available[i]==0)begin
                     card_num[card_state]=i;
                     available[i%52]=1;
+                    card_state=card_state+1;
                     stop=1;
                 end
             end
@@ -165,6 +170,7 @@ always @(posedge clk) begin
                 if(available[i]==0)begin
                     card_num[card_state]=i;
                     available[i%52]=1;
+                    card_state=card_state+1;
                     stop=1;
                 end
             end
@@ -183,6 +189,7 @@ always @(posedge clk) begin
                 if(available[i]==0)begin
                     card_num[card_state]=i;
                     available[i%52]=1;
+                    card_state=card_state+1;
                     stop=1;
                 end
             end
@@ -194,14 +201,17 @@ always @(posedge clk) begin
             card_num[card_state]=count;
             card_state=card_state+1;
             available[count]=1;
+            work_done_card_generation=1;
         end
         else begin
             stop=0;
             for(i=count+1;stop==0;i=i+1)begin
                 if(available[i]==0)begin
                     card_num[card_state]=i;
+                    card_state=card_state+1;
                     available[i%52]=1;
                     stop=1;
+                    work_done_card_generation=1;
                 end
             end
         end
@@ -220,5 +230,4 @@ always @* begin
     card8_num=card_num[7];
     card9_num=card_num[8];
 end
-
 endmodule
